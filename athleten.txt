@@ -1,0 +1,321 @@
+<?php
+/*
+Plugin Name: Athleten
+Plugin URI: http://www.impres-sign.com/
+Description: Athleten-Register mit Foto. In unserem Falle wird dies fuer den schweizer Schwingsport gebraucht, um alle Spitzensportler zu erfassen.
+Version: 1.0
+Author: Marc Juchli
+Author URI: http://www.impres-sign.com/
+License: GPL
+Stable Tag: 1.0
+*/
+?>
+
+<style type="text/css">
+.cf input{
+
+}
+.cf:before,
+.cf:after {
+   content:"";
+   display:table;
+}
+
+.cf:after {
+   clear:both;
+}
+
+/* For IE 6/7 (trigger hasLayout) */
+.cf {
+        width: 100%;
+   zoom:1;
+}
+</style>
+
+<?php
+add_action('init', 'athleten');
+function athleten() {
+ 
+        $labels = array(
+                'name' => _x('Athleten', 'post type general name'),
+                'singular_name' => _x('Athlet', 'post type singular name'),
+                'add_new' => _x('Add New', 'portfolio item'),
+                'add_new_item' => __('Add New Portfolio Item'),
+                'edit_item' => __('Edit Portfolio Item'),
+                'new_item' => __('New Portfolio Item'),
+                'view_item' => __('View Portfolio Item'),
+                'search_items' => __('Search Portfolio'),
+                'not_found' =>  __('Nothing found'),
+                'not_found_in_trash' => __('Nothing found in Trash'),
+                'parent_item_colon' => ''
+        );
+ 
+        $args = array(
+                'labels' => $labels,
+                'public' => true,
+                'publicly_queryable' => true,
+                'show_ui' => true,
+                'query_var' => true,
+                'menu_icon' => get_stylesheet_directory_uri() . '/article16.png',
+                'rewrite' => true,
+                'rewrite' => array('slug' => 'athleten'),
+                'capability_type' => 'post',
+                'hierarchical' => false,
+                'menu_position' => 4,
+                'supports' => array('thumbnail')
+          ); 
+ 
+        register_post_type( 'athleten' , $args );
+}
+
+
+add_action("admin_init", "admin_init");
+function admin_init(){
+  add_meta_box("number_meta", "Zahlen", "number_meta", "athleten", "side", "low");
+  add_meta_box("digital_meta", "Digital", "digital_meta", "athleten", "side", "low");
+  add_meta_box("credits_meta", "Angaben zur Person", "credits_meta", "athleten", "normal", "low");
+  add_meta_box("club_meta", "Club/Verband", "club_meta", "athleten", "normal", "low");
+}
+
+function number_meta(){
+        global $post;
+        $custom = get_post_custom($post->ID);
+        $weight = $custom["weight"][0];
+        $size = $custom["size"][0];
+        ?>
+        <label>Gewicht:</label>
+        <input size="3" name="weight" value="<?php echo $weight; ?>" />kg<br />
+        <label>Gr&ouml;sse:</label>
+        <input size="3" name="size" value="<?php echo $size; ?>" />cm
+  <?php
+}
+
+function digital_meta(){
+        global $post;
+        $custom = get_post_custom($post->ID);
+        $url = $custom["url"][0];
+        ?>
+        <label>Webseite:</label>
+        <input name="url" value="<?php echo $url; ?>" />
+  <?php
+}
+
+function credits_meta() {
+        global $post;
+        $custom = get_post_custom($post->ID);
+        $name = $custom["name"][0];
+        $prename = $custom["prename"][0];
+        $job = $custom["job"][0];
+        //$birth = $custom["birth"][0];
+        $birthD = $custom["birthD"][0];
+        $birthM = $custom["birthM"][0];
+        $birthY = $custom["birthY"][0];
+        $hobbies = $custom["hobbies"][0];
+        $birthD = date("d", $custom["birth"][0]);
+        $birthM = date("m", $custom["birth"][0]);
+        $birthY = date("Y", $custom["birth"][0]);
+        ?>
+        <div class="cf">
+                <p style="float:left;">
+                <label>Vorname:</label><br />
+                <input name="prename" value="<?php echo $prename; ?>" />
+                </p>
+                <p style="float:left;">
+                <label>Nachname:</label><br />
+                <input name="name" value="<?php echo $name; ?>" />
+                </p>
+        </div>
+        <div class="cf">
+                <p style="float:left;">
+                <label>Beruf:</label><br />
+                <input name="job" value="<?php echo $job; ?>" />
+                </p>
+                <p style="float:left;">
+                <label>Gebutsdatum:</label><br />
+                        <input id="Geburtstag" maxlength="10" size="1" name="birthD" value="<?php echo $birthD; ?>" />
+                        <input id="Geburtstag" maxlength="10" size="1" name="birthM" value="<?php echo $birthM; ?>" />
+                        <input id="Geburtstag" maxlength="10" size="4" name="birthY" value="<?php echo $birthY; ?>" />
+                </p>
+        </div>
+        <div class="cf">
+                <p style="float:left;">
+                <label>Hobbies:</label><br />
+                <input name="hobbies" value="<?php echo $hobbies; ?>" />
+                </p>
+        </div>
+        <?php
+}
+
+function club_meta() {
+        global $post;
+        $custom = get_post_custom($post->ID);
+
+        $verband = $custom["verband"][0];
+        $club = $custom["club"][0];
+        $vorbild = $custom["vorbild"][0];
+        $story = $custom["story"][0];
+        $special = $custom["special"][0];
+        ?>
+
+        <div class="cf">
+                <p style="float:left;">
+                <label>Verband:</label><br />
+                <input name="verband" value="<?php echo $verband; ?>" />
+                </p>
+                <p style="float:left;">
+                <label>Club:</label><br />
+                <input name="club" value="<?php echo $club; ?>" />
+                </p>
+        </div>
+        <div class="cf">
+                <p style="float:left;">
+                <label>Vorbild, und warum?:</label><br />
+                <input size="110" name="vorbild" value="<?php echo $vorbild; ?>" />
+                </p>
+        </div>
+        <div class="cf">
+                <p style="float:left;">
+                <label>Geschichte aus dem Leben:</label><br />
+                <textarea name="story" cols="100"><?php echo $story; ?></textarea>
+                </p>
+        </div>
+        <div class="cf">
+                <p style="float:left;">
+                <label>Besonderes Merkmal:</label><br />
+                <input size="110" name="special" value="<?php echo $special; ?>" />
+                </p>
+        </div>
+        <?php
+}
+
+function save_details(){
+  global $post;
+  global $wpdb;
+  $birth = mktime(0, 0, 0, $_POST['birthM'], $_POST['birthD'], $_POST['birthY']);
+  update_post_meta($post->ID, "url", $_POST["url"]);
+  update_post_meta($post->ID, "weight", $_POST["weight"]);
+  update_post_meta($post->ID, "size", $_POST["size"]);
+  update_post_meta($post->ID, "name", $_POST["name"]);
+  update_post_meta($post->ID, "prename", $_POST["prename"]);
+  update_post_meta($post->ID, "job", $_POST["job"]);
+  update_post_meta($post->ID, "birth", $birth);
+  update_post_meta($post->ID, "hobbies", $_POST["hobbies"]);
+  update_post_meta($post->ID, "verband", $_POST["verband"]);
+  update_post_meta($post->ID, "club", $_POST["club"]);
+  update_post_meta($post->ID, "vorbild", $_POST["vorbild"]);
+  update_post_meta($post->ID, "story", $_POST["story"]);
+  update_post_meta($post->ID, "special", $_POST["special"]);
+
+
+//  update_post_meta($post->ID, "title", $_POST["name"].", ".$_POST['prename']);
+
+        //just set titel for the athleten-posts
+        if($_POST["name"] != "" && $_POST["prename"] != ""){
+                $titel_new = wp_unique_post_slug(
+                    $_POST["name"] . " " . $_POST["prename"],
+                    $post->ID,
+                    $post->post_type,
+                    0
+                );
+                $titel_new = sanitize_title( $titel_new );
+
+//              $dubbles = $wpdb->query( $wpdb->prepare( "select count(*) from ".$wpdb->posts." where post_name = '$titel_new'" ) );
+//              if($dubbles !== 0) $titel_new .= "-".$dubbles;
+
+                $wpdb->query( $wpdb->prepare( "update ".$wpdb->posts." set post_title = '$titel_new', post_name = '$titel_new' where ID = '$post->ID'" ) );
+        }
+}
+add_action('save_post', 'save_details');
+
+
+
+
+// Add to admin_init function
+add_filter('manage_edit-athleten_columns', 'add_new_athleten_columns');
+
+        function add_new_athleten_columns($gallery_columns) {
+                $new_columns['cb'] = '<input type="checkbox" />';
+                $new_columns['id'] = __('ID');
+                $new_columns['name'] = __('Name');
+                $new_columns['prename'] = __('Vorname');
+                $new_columns['birth'] = __('Geburtsdatum');
+                $new_columns['date'] = _x('Date', 'column name');
+ 
+                return $new_columns;
+        }
+
+        // Add to admin_init function
+        add_action('manage_athleten_posts_custom_column', 'manage_athleten_columns', 10, 2);
+ 
+        function manage_athleten_columns($column_name, $id) {
+                global $wpdb;
+                switch ($column_name) {
+                case 'id':
+                        echo $id;
+                        break;
+                case 'name':
+                        echo "<a href=\"post.php?post=".$id."&action=edit\">".get_post_meta($id, 'name', true)."</a>";
+                                break;
+                case 'prename':
+                        echo "<a href=\"post.php?post=".$id."&action=edit\">".get_post_meta($id, 'prename', true)."</a>";
+                                break;
+                case 'birth':
+                        echo "<a href=\"post.php?post=".$id."&action=edit\">".date("d.m.Y", get_post_meta($id, 'birth', true))."</a>";
+                                break;
+                case 'images':
+                        // Get number of images in gallery
+                        $num_images = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->posts WHERE post_parent = {$id};"));
+                        echo $num_images; 
+                        break;
+                default:
+                        break;
+                } // end switch
+        }
+
+function frontend_list() {
+            global $post;
+            ?><ul id="<?php echo strtolower('a'); ?>" class="letter"><?php
+            rewind_posts();
+         
+            // Create a new WP_Query() object
+            $wpcust = new WP_Query(
+                array(
+                    'post_type' => array('athleten'),
+                    'showposts' => '500', // or 10 etc. however many you want
+                    'orderby' => 'title', 'order' => 'ASC'
+                        )
+                );
+                        //print_r($wpcust);
+                        $i=0;
+                        $l=0; //first letter
+                if ( $wpcust->have_posts() ) : while( $wpcust->have_posts() ) : $wpcust->the_post();
+                        $name = get_post_meta($post->ID, 'name', true);
+                        $prename = get_post_meta($post->ID, 'prename', true);
+
+                        if($i != 0 && $name[0] != $l)
+                                {
+                                        ?></ul><?php;
+                                }
+
+                                if($name[0] != $l) 
+                                {
+                                        ?>
+                                        <ul id="<?php echo strtolower($name[0]); ?>" class="letter">
+                                        <li><a href="<?php echo the_permalink(); ?>" title="Zum Profil von Schwinger <?php echo $prename." ".$name; ?> ">
+                                        <?php echo $name.", ".$prename; ?></a></li>
+                                <?php
+
+
+                                } else {
+                                        ?>
+                                        <li><a href="<?php echo the_permalink(); ?>" title="Zum Profil von Schwinger <?php echo $prename." ".$name; ?> ">
+                                        <?php echo $name.", ".$prename; ?></a></li>
+                                        <?php
+                                }
+                                $l = $name[0];
+                                $i++;
+
+                endwhile; endif;
+                wp_reset_query(); // reset the Loop
+                        if($i != 0) echo "</ul>";
+}
