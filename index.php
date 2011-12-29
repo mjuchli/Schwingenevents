@@ -178,7 +178,7 @@ function agenda_frontend_list() {
 			<li><?php echo $dateFrom; ?></li>
 			<li><?php echo $description; ?></li>
 			<li><?php echo $place; ?></li>
-			<li><a href="<?php echo $link; ?>">Link</a></li>
+			<li><?php if($link != ""){ ?><a href="<?php echo $link; ?>">Link</a><?php } ?></li>
 			</ul>
 			<?php
 	endwhile; endif;
