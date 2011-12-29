@@ -145,7 +145,7 @@ function manage_agenda_columns($column_name, $id) {
 
 // -- BACKEND nun abgeschlossen --
 
-//Liste im Frontend
+//Liste fuer Aufruf im Frontend
 function agenda_frontend_list() {
 	global $post;
 	rewind_posts();
