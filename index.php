@@ -83,11 +83,18 @@ function agenda_upload_meta(){
 function agenda_dates_meta(){
 	global $post;
 	$custom = get_post_custom($post->ID);
-	$dateFrom = $custom["dateFrom"][0];
+	//$dateFromD = $custom["dateFromD"][0];
+	//$dateFromM = $custom["dateFromM"][0];
+	//$dateFromY = $custom["dateFromY"][0];
+	$dateFromD = date("d", $custom["dateFrom"][0]);
+	$dateFromM = date("m", $custom["dateFrom"][0]);
+	$dateFromY = date("Y", $custom["dateFrom"][0]);
 	//$dateTo = $custom["dateTo"][0];
 	?>
-	<label>Beginn:</label><br />
-	<input size="25" name="dateFrom" value="<?php echo $dateFrom; ?>" /><br />
+	<label>Beginn (D/M/Y):</label><br />
+	<input size="2" name="dateFromD" value="<?php echo $dateFromD; ?>" />
+	<input size="2" name="dateFromM" value="<?php echo $dateFromM; ?>" />
+	<input size="5" name="dateFromY" value="<?php echo $dateFromY; ?>" /><br />
 	<!-- <label>Ende:</label><br /> 
 	<input size="25" name="dateTo" value="<?php //echo $dateTo; ?>" /><br /> -->
 	<?php
@@ -97,10 +104,11 @@ function agenda_dates_meta(){
 function agenda_save_details(){
 	global $post;
 	global $wpdb;
+	$dateFrom = mktime(0, 0, 0, $_POST['dateFromM'], $_POST['dateFromD'], $_POST['dateFromY']);
 	update_post_meta($post->ID, "description", $_POST["description"]);
 	update_post_meta($post->ID, "place", $_POST["place"]);
 	update_post_meta($post->ID, "link", $_POST["link"]);
-	update_post_meta($post->ID, "dateFrom", $_POST["dateFrom"]);
+	update_post_meta($post->ID, "dateFrom", $dateFrom);
 	//update_post_meta($post->ID, "dateTo", $_POST["dateTo"]);
 }
 add_action('save_post', 'agenda_save_details');
@@ -127,7 +135,7 @@ function manage_agenda_columns($column_name, $id) {
 			echo $id;
 			break;
 		case 'dateFrom':
-			echo "<a href=\"post.php?post=".$id."&action=edit\">".get_post_meta($id, 'dateFrom', true)."</a>";
+			echo "<a href=\"post.php?post=".$id."&action=edit\">".date("d.m.Y", get_post_meta($id, 'dateFrom', true))."</a>";
 			break;
 		case 'description':
 			echo "<a href=\"post.php?post=".$id."&action=edit\">".get_post_meta($id, 'description', true)."</a>";
@@ -164,6 +172,7 @@ function agenda_frontend_list() {
 		$place = get_post_meta($post->ID, 'place', true);
 		$link = get_post_meta($post->ID, 'link', true);
 		$dateFrom = get_post_meta($post->ID, 'dateFrom', true);
+		$dateFrom = date("d.m.Y", $dateFrom)
 			?>
 			<ul id="<?php echo strtolower($name[0]); ?>" class="letter">
 			<li><?php echo $dateFrom; ?></li>
