@@ -94,7 +94,7 @@ function agenda_dates_meta(){
 }
 
 //Zuordung fuer Update
-function save_details(){
+function agenda_save_details(){
 	global $post;
 	global $wpdb;
 	update_post_meta($post->ID, "description", $_POST["description"]);
@@ -103,7 +103,7 @@ function save_details(){
 	update_post_meta($post->ID, "dateFrom", $_POST["dateFrom"]);
 	//update_post_meta($post->ID, "dateTo", $_POST["dateTo"]);
 }
-add_action('save_post', 'save_details');
+add_action('save_post', 'agenda_save_details');
 
 // Formatierung der Tabelle im backend
 add_filter('manage_edit-agenda_columns', 'add_new_agenda_columns');
