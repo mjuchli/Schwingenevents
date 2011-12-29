@@ -49,13 +49,13 @@ function agenda() {
 //Einteilung von Verwaltungsmaske
 add_action("admin_init", "agenda_init");
 function agenda_init(){
-	add_meta_box("dates_meta", "Datum", "dates_meta", "agenda", "side", "low");
-	add_meta_box("credits_meta", "Angaben zum Schwingfest", "credits_meta", "agenda", "normal", "low");
-	add_meta_box("upload_meta", "Rangliste", "upload_meta", "agenda", "normal", "low");
+	add_meta_box("agenda_dates_meta", "Datum", "agenda_dates_meta", "agenda", "side", "low");
+	add_meta_box("agenda_credits_meta", "Angaben zum Schwingfest", "agenda_credits_meta", "agenda", "normal", "low");
+	add_meta_box("agenda_upload_meta", "Rangliste", "agenda_upload_meta", "agenda", "normal", "low");
 }
 
 //Input Felder credits_meta (Angaben zum Schwingfest)
-function credits_meta(){
+function agenda_credits_meta(){
 	global $post;
 	$custom = get_post_custom($post->ID);
 	$description = $custom["description"][0];
@@ -69,7 +69,7 @@ function credits_meta(){
 }
 
 //Input Felder upload_meta (Rangliste)
-function upload_meta(){
+function agenda_upload_meta(){
 	global $post;
 	$custom = get_post_custom($post->ID);
 	$link = $custom["link"][0];
@@ -80,7 +80,7 @@ function upload_meta(){
 }
 
 //Input Felder dates_meta (Datum)
-function dates_meta(){
+function agenda_dates_meta(){
 	global $post;
 	$custom = get_post_custom($post->ID);
 	$dateFrom = $custom["dateFrom"][0];
