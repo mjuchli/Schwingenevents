@@ -47,8 +47,8 @@ function agenda() {
 }
 
 //Einteilung von Verwaltungsmaske
-add_action("admin_init", "admin_init");
-function admin_init(){
+add_action("admin_init", "agenda_init");
+function agenda_init(){
 	add_meta_box("dates_meta", "Datum", "dates_meta", "agenda", "side", "low");
 	add_meta_box("credits_meta", "Angaben zum Schwingfest", "credits_meta", "agenda", "normal", "low");
 	add_meta_box("upload_meta", "Rangliste", "upload_meta", "agenda", "normal", "low");
