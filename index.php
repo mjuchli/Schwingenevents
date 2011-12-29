@@ -39,8 +39,8 @@ function agenda() {
 		'rewrite' => array('slug' => 'agenda'),
 		'capability_type' => 'post',
 		'hierarchical' => false,
-		'menu_position' => 4,
-		'supports' => array('thumbnail')
+		'menu_position' => 4
+		//'supports' => array('thumbnail')
 	); 
 
 	 register_post_type( 'agenda' , $args );
