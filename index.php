@@ -10,41 +10,40 @@ License: GPL
 Stable Tag: 1.0
 */
 ?>
-
 <?php
 //Plugin-init
 add_action('init', 'agenda');
 function agenda() {
-        $labels = array(
-                'name' => _x('Agenda', 'post type general name'),
-                'singular_name' => _x('Agenda', 'post type singular name'),
-                'add_new' => _x('Add New', 'portfolio item'),
-                'add_new_item' => __('Add New Portfolio Item'),
-                'edit_item' => __('Edit Portfolio Item'),
-                'new_item' => __('New Portfolio Item'),
-                'view_item' => __('View Portfolio Item'),
-                'search_items' => __('Search Portfolio'),
-                'not_found' =>  __('Nothing found'),
-                'not_found_in_trash' => __('Nothing found in Trash'),
-                'parent_item_colon' => ''
-        );
- 
-        $args = array(
-                'labels' => $labels,
-                'public' => true,
-                'publicly_queryable' => true,
-                'show_ui' => true,
-                'query_var' => true,
-                'menu_icon' => get_stylesheet_directory_uri() . '/article16.png',
-                'rewrite' => true,
-                'rewrite' => array('slug' => 'agenda'),
-                'capability_type' => 'post',
-                'hierarchical' => false,
-                'menu_position' => 4,
-                'supports' => array('thumbnail')
-          ); 
- 
-        register_post_type( 'agenda' , $args );
+	$labels = array(
+		'name' => _x('Agenda', 'post type general name'),
+		'singular_name' => _x('Agenda', 'post type singular name'),
+		'add_new' => _x('Add New', 'portfolio item'),
+		'add_new_item' => __('Add New Portfolio Item'),
+		'edit_item' => __('Edit Portfolio Item'),
+		'new_item' => __('New Portfolio Item'),
+		'view_item' => __('View Portfolio Item'),
+		'search_items' => __('Search Portfolio'),
+		'not_found' =>  __('Nothing found'),
+		'not_found_in_trash' => __('Nothing found in Trash'),
+		'parent_item_colon' => ''
+	);
+
+	$args = array(
+		'labels' => $labels,
+		'public' => true,
+		'publicly_queryable' => true,
+		'show_ui' => true,
+		'query_var' => true,
+		'menu_icon' => get_stylesheet_directory_uri() . '/article16.png',
+		'rewrite' => true,
+		'rewrite' => array('slug' => 'agenda'),
+		'capability_type' => 'post',
+		'hierarchical' => false,
+		'menu_position' => 4,
+		'supports' => array('thumbnail')
+	); 
+
+	 register_post_type( 'agenda' , $args );
 }
 
 //Einteilung von Verwaltungsmaske
@@ -106,11 +105,8 @@ function save_details(){
 }
 add_action('save_post', 'save_details');
 
-// ------------------------------------------------------------------------------
-
-// Add to admin_init function
+// Formatierung der Tabelle im backend
 add_filter('manage_edit-agenda_columns', 'add_new_agenda_columns');
-
 function add_new_agenda_columns($gallery_columns) {
 	$new_columns['cb'] = '<input type="checkbox" />';
 	$new_columns['id'] = __('ID');
@@ -122,9 +118,8 @@ function add_new_agenda_columns($gallery_columns) {
 	return $new_columns;
 }
 
-// Add to admin_init function
+// Formatierung der Tabelle im backend
 add_action('manage_agenda_posts_custom_column', 'manage_agenda_columns', 10, 2);
-
 function manage_agenda_columns($column_name, $id) {
 	global $wpdb;
 	switch ($column_name) {
@@ -148,4 +143,36 @@ function manage_agenda_columns($column_name, $id) {
 	} // end switch
 }
 
+// -- BACKEND nun abgeschlossen --
+
+//Liste im Frontend
+function frontend_list() {
+	global $post;
+	rewind_posts();
+
+	// Create a new WP_Query() object
+	$wpcust = new WP_Query(
+		array(
+		'post_type' => array('agenda'),
+		'showposts' => '500', // or 10 etc. however many you want
+		'orderby' => 'dateFrom', 'order' => 'ASC'
+		)
+	);
+	//print_r($wpcust);
+	if ( $wpcust->have_posts() ) : while( $wpcust->have_posts() ) : $wpcust->the_post();
+		$description = get_post_meta($post->ID, 'description', true);
+		$place = get_post_meta($post->ID, 'place', true);
+		$link = get_post_meta($post->ID, 'link', true);
+		$dateFrom = get_post_meta($post->ID, 'dateFrom', true);
+			?>
+			<ul id="<?php echo strtolower($name[0]); ?>" class="letter">
+			<li><?php echo $dateFrom; ?></li>
+			<li><?php echo $description; ?></li>
+			<li><?php echo $place; ?></li>
+			<li><a href="<?php echo $link; ?>">Link</a></li>
+			</ul>
+			<?php
+	endwhile; endif;
+	wp_reset_query(); // reset the Loop
+}
 ?>
