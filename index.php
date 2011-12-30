@@ -174,11 +174,11 @@ function agenda_frontend_list() {
 		$dateFrom = get_post_meta($post->ID, 'dateFrom', true);
 		$dateFrom = date("d.m.Y", $dateFrom)
 			?>
-			<ul id="<?php echo strtolower($name[0]); ?>" class="letter">
-			<li><?php echo $dateFrom; ?></li>
-			<li><?php echo $description; ?></li>
-			<li><?php echo $place; ?></li>
-			<li><?php if($link != ""){ ?><a href="<?php echo $link; ?>">Rangliste</a><?php } ?></li>
+			<ul class="cf">
+				<li class="left"><?php echo $dateFrom; ?></li>
+				<li class="left" style="width: 334px"><?php echo $description; ?></li>
+				<li class="left" style="width: 125px"><?php echo $place; ?></li>
+				<li class="left"><?php if($link != ""){ ?><a href="<?php echo $link; ?>">Rangliste</a><?php } ?></li>
 			</ul>
 			<?php
 	endwhile; endif;
